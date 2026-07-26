@@ -194,7 +194,13 @@ run_opam() {
 
 if [[ ! -f "${opam_root}/config" ]]; then
   mkdir -p "${opam_root}"
-  run_opam init --bare --no-setup --yes default "${opam_repository_url}"
+  run_opam init \
+    --bare \
+    --no-setup \
+    --yes \
+    --no-opamrc \
+    --disable-sandboxing \
+    default "${opam_repository_url}"
 fi
 
 ocamlc_switch="${ocaml_switch}/_opam/bin/ocamlc"
