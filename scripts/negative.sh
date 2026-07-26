@@ -54,7 +54,7 @@ write_fingerprint() {
   mv -f -- "${temporary}" "${fingerprint_file}"
 }
 
-for command_name in awk git grep mktemp mv python3 sed; do
+for command_name in awk env git grep mktemp mv python3 sed; do
   command -v "${command_name}" >/dev/null 2>&1 \
     || blocked "required command is unavailable: ${command_name}"
 done
@@ -82,7 +82,7 @@ derived_line="$(awk '/observe \(xor \(secret 0xA5uy\)/ { print NR; exit }' "${ne
 [[ -n "${derived_line}" ]] || fail "derived secret-observation attempt is missing"
 
 set +e
-"${FSTAR_EXE}" \
+env -u GITHUB_ACTIONS "${FSTAR_EXE}" \
   --include "${repo_root}/src" \
   --cache_dir "${cache_dir}" \
   --z3version 4.13.3 \
