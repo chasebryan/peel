@@ -1,0 +1,58 @@
+name: Verify PEEL P0
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'examples/**'
+      - 'tests/**'
+      - 'scripts/**'
+      - 'Makefile'
+      - 'toolchain.lock'
+      - '.github/workflows/verify.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'examples/**'
+      - 'tests/**'
+      - 'scripts/**'
+      - 'Makefile'
+      - 'toolchain.lock'
+      - '.github/workflows/verify.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: P0 gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Build the locked local toolchain
+        env:
+          PEEL_BUILD_JOBS: '2'
+        run: ./scripts/bootstrap-toolchain.sh
+
+      - name: Run P0 gates
+        shell: bash
+        run: |
+          source .toolchain/env
+          make check
+
+      # actions/upload-artifact v4.6.2
+      - name: Upload P0 evidence and logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: peel-p0-evidence-and-logs
+          path: |
+            build/evidence/peel-p0.json
+            build/logs/
+          if-no-files-found: ignore
+          retention-days: 14

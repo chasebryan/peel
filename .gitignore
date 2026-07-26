@@ -1,0 +1,32 @@
+# Repository-local generated output and acquired tools
+/build/
+/.toolchain/
+/_opam/
+
+# F* verifier and extraction caches
+*.checked
+*.checked.*
+*.hints
+*.krml
+.fstar-cache/
+
+# Python caches produced by evidence linting and validation
+__pycache__/
+*.py[cod]
+
+# Compiled and generated native artifacts
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.exe
+*.out
+
+# Editor and operating-system files
+*~
+*.swp
+*.swo
+.DS_Store
+.idea/
+.vscode/
